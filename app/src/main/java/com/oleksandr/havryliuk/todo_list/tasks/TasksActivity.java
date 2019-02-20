@@ -11,6 +11,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.oleksandr.havryliuk.todo_list.R;
+import com.oleksandr.havryliuk.todo_list.auth.Auth;
+import com.oleksandr.havryliuk.todo_list.auth.AuthenticationActivity;
 import com.oleksandr.havryliuk.todo_list.data.source.TasksRepository;
 import com.oleksandr.havryliuk.todo_list.statistics.StatisticsActivity;
 import com.oleksandr.havryliuk.todo_list.utils.ActivityUtils;
@@ -71,10 +73,12 @@ public class TasksActivity extends AppCompatActivity {
                                 // Do nothing, we're already on that screen
                                 break;
                             case R.id.statistics_navigation_menu_item:
-                                Intent intent =
-                                        new Intent(TasksActivity.this, StatisticsActivity.class);
-                                startActivity(intent);
+                                startActivity(new Intent(TasksActivity.this, StatisticsActivity.class));
                                 break;
+                            case R.id.sign_out_navigation_menu_item:
+                                Auth.signOut();
+                                startActivity(new Intent(TasksActivity.this, AuthenticationActivity.class));
+                                finish();
                             default:
                                 break;
                         }

@@ -26,4 +26,13 @@ public class ActivityUtils {
         transaction.commit();
     }
 
+    public static boolean isFragmentInBackstack(final FragmentManager fragmentManager,
+                                                final String fragmentTagName) {
+        for (int entry = 0; entry < fragmentManager.getBackStackEntryCount(); entry++) {
+            if (fragmentTagName.equals(fragmentManager.getBackStackEntryAt(entry).getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

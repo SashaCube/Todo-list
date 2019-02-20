@@ -9,16 +9,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Base.AppTheme">
-        <activity android:name=".tasks.TasksActivity">
+        <activity
+            android:name=".auth.AuthenticationActivity"
+            android:screenOrientation="portrait"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.oleksandr.havryliuk.todo_list.addedittask.AddEditTaskActivity" />
-        <activity android:name="com.oleksandr.havryliuk.todo_list.taskdetail.TaskDetailActivity" />
-        <activity android:name="com.oleksandr.havryliuk.todo_list.statistics.StatisticsActivity" />
+        <activity android:name=".tasks.TasksActivity"/>
+        <activity android:name=".addedittask.AddEditTaskActivity" />
+        <activity android:name=".taskdetail.TaskDetailActivity" />
+        <activity android:name=".statistics.StatisticsActivity" />
     </application>
 
 </manifest>
