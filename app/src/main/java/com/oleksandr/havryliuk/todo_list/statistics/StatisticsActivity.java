@@ -1,6 +1,5 @@
-package com.oleksandr.havryliuk.todo_list.tasks;
+package com.oleksandr.havryliuk.todo_list.statistics;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,47 +11,51 @@ import android.view.MenuItem;
 
 import com.oleksandr.havryliuk.todo_list.R;
 import com.oleksandr.havryliuk.todo_list.data.source.TasksRepository;
-import com.oleksandr.havryliuk.todo_list.statistics.StatisticsActivity;
 import com.oleksandr.havryliuk.todo_list.utils.ActivityUtils;
 
-public class TasksActivity extends AppCompatActivity {
+public class StatisticsActivity extends AppCompatActivity {
 
-    private TasksPresenter mTasksPresenter;
     private DrawerLayout mDrawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
+        setContentView(R.layout.activity_statistics);
+
+        // Set up the toolbar.
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar ab = getSupportActionBar();
+        ab.setTitle(R.string.statistics_title);
+        ab.setHomeAsUpIndicator(R.drawable.ic_menu);
+        ab.setDisplayHomeAsUpEnabled(true);
+
+        // Set up the navigation drawer.
         mDrawerLayout = findViewById(R.id.drawer_layout);
+        mDrawerLayout.setStatusBarBackground(R.color.colorPrimaryDark);
         NavigationView navigationView = findViewById(R.id.nav_view);
         if (navigationView != null) {
             setupDrawerContent(navigationView);
         }
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        ActionBar actionbar = getSupportActionBar();
-        actionbar.setDisplayHomeAsUpEnabled(true);
-        actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
-
-        TasksFragment tasksFragment =
-                (TasksFragment) getSupportFragmentManager().findFragmentById(R.id.content_frame);
-        if (tasksFragment == null) {
-            tasksFragment = TasksFragment.newInstance();
-            ActivityUtils.addFragmentToActivity(
-                    getSupportFragmentManager(), tasksFragment, R.id.content_frame);
+        StatisticsFragment statisticsFragment = (StatisticsFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.content_frame);
+        if (statisticsFragment == null) {
+            statisticsFragment = StatisticsFragment.newInstance();
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
+                    statisticsFragment, R.id.content_frame);
         }
 
-        mTasksPresenter = new TasksPresenter(TasksRepository.getInstance(this), tasksFragment);
-        tasksFragment.setPresenter(mTasksPresenter);
+        new StatisticsPresenter(
+                TasksRepository.getInstance(getApplicationContext()), statisticsFragment);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                // Open the navigation drawer when the home icon is selected from the toolbar.
                 mDrawerLayout.openDrawer(GravityCompat.START);
                 return true;
         }
@@ -64,24 +67,21 @@ public class TasksActivity extends AppCompatActivity {
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        mDrawerLayout.closeDrawers();
-
                         switch (menuItem.getItemId()) {
                             case R.id.list_navigation_menu_item:
-                                // Do nothing, we're already on that screen
+                                mDrawerLayout.closeDrawers();
+                                finish();
                                 break;
                             case R.id.statistics_navigation_menu_item:
-                                Intent intent =
-                                        new Intent(TasksActivity.this, StatisticsActivity.class);
-                                startActivity(intent);
+                                // Do nothing, we're already on that screen
                                 break;
                             default:
                                 break;
                         }
+                        // Close the navigation drawer when an item is selected
+                        mDrawerLayout.closeDrawers();
                         return true;
                     }
                 });
     }
 }
-
-
