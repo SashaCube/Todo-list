@@ -19,13 +19,14 @@ public class AddEditTaskActivity extends AppCompatActivity {
     private AddEditTaskPresenter mAddEditTaskPresenter;
 
     private ActionBar mActionBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_edit_task);
 
         // Set up the toolbar.
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mActionBar = getSupportActionBar();
         mActionBar.setDisplayHomeAsUpEnabled(true);
@@ -69,7 +70,7 @@ public class AddEditTaskActivity extends AppCompatActivity {
     }
 
     private void setToolbarTitle(@Nullable String taskId) {
-        if(taskId == null) {
+        if (taskId == null) {
             mActionBar.setTitle(R.string.add_task);
         } else {
             mActionBar.setTitle(R.string.edit_task);

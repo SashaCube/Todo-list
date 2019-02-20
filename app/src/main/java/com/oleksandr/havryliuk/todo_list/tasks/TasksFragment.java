@@ -30,6 +30,7 @@ import android.widget.TextView;
 import com.oleksandr.havryliuk.todo_list.R;
 import com.oleksandr.havryliuk.todo_list.addedittask.AddEditTaskActivity;
 import com.oleksandr.havryliuk.todo_list.data.Task;
+import com.oleksandr.havryliuk.todo_list.taskdetail.TaskDetailActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -285,9 +286,9 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     public void showTaskDetailsUi(String taskId) {
         // in it's own Activity, since it makes more sense that way and it gives us the flexibility
         // to show some Intent stubbing.
-//        Intent intent = new Intent(getContext(), TaskDetailActivity.class);
-//        intent.putExtra(TaskDetailActivity.EXTRA_TASK_ID, taskId);
-//        startActivity(intent);
+        Intent intent = new Intent(getContext(), TaskDetailActivity.class);
+        intent.putExtra(TaskDetailActivity.EXTRA_TASK_ID, taskId);
+        startActivity(intent);
     }
 
     @Override
@@ -358,9 +359,9 @@ public class TasksFragment extends Fragment implements TasksContract.View {
             viewHolder.completed.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(model.isCompleted()){
+                    if (model.isCompleted()) {
                         mListener.onActivateTaskClick(model);
-                    }else{
+                    } else {
                         mListener.onCompleteTaskClick(model);
                     }
                 }
@@ -385,7 +386,7 @@ public class TasksFragment extends Fragment implements TasksContract.View {
             }
         }
 
-        void replaceData(List<Task> tasks){
+        void replaceData(List<Task> tasks) {
             this.tasks = tasks;
             notifyDataSetChanged();
         }
