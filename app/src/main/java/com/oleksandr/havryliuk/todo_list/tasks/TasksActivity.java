@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.oleksandr.havryliuk.todo_list.R;
+import com.oleksandr.havryliuk.todo_list.data.source.TasksRepository;
 import com.oleksandr.havryliuk.todo_list.utils.ActivityUtils;
 
 public class TasksActivity extends AppCompatActivity {
@@ -42,6 +43,9 @@ public class TasksActivity extends AppCompatActivity {
             ActivityUtils.addFragmentToActivity(
                     getSupportFragmentManager(), tasksFragment, R.id.content_frame);
         }
+
+        mTasksPresenter = new TasksPresenter(TasksRepository.getInstance(this), tasksFragment);
+        tasksFragment.setPresenter(mTasksPresenter);
     }
 
     @Override
