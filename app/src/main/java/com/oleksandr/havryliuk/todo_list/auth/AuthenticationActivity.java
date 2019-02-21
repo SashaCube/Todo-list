@@ -12,6 +12,7 @@ import com.oleksandr.havryliuk.todo_list.auth.signin.SignInFragment;
 import com.oleksandr.havryliuk.todo_list.auth.signup.SignUpFragment;
 import com.oleksandr.havryliuk.todo_list.tasks.TasksActivity;
 import com.oleksandr.havryliuk.todo_list.utils.ActivityUtils;
+import com.oleksandr.havryliuk.todo_list.utils.PreferenceManager;
 
 public class AuthenticationActivity extends AppCompatActivity implements IAuthModel {
 
@@ -19,6 +20,8 @@ public class AuthenticationActivity extends AppCompatActivity implements IAuthMo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authentication);
+
+        PreferenceManager.init(this);
 
         if (Auth.isUserAuth()) {
             startTaskActivity();

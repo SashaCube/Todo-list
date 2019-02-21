@@ -22,6 +22,8 @@ public interface TasksDataSource {
         void onDataNotAvailable();
     }
 
+    void destroyInstance();
+
     void getTasks(@NonNull LoadTasksCallback callback);
 
     void getTask(@NonNull String taskId, @NonNull GetTaskCallback callback);

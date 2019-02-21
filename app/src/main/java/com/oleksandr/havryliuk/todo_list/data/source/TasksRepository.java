@@ -16,32 +16,32 @@ import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class TasksRepository implements TasksDataSource{
+public class TasksRepository implements TasksDataSource {
 
     private static TasksRepository INSTANCE = null;
 
-    private final TasksDataSource mTasksRemoteDataSource;
+    private TasksDataSource mTasksRemoteDataSource;
 
-    private final TasksDataSource mTasksLocalDataSource;
+    private TasksDataSource mTasksLocalDataSource;
 
     Map<String, Task> mCachedTasks;
-
-    boolean mCacheIsDirty = false;
 
     // Prevent direct instantiation.
     private TasksRepository(@NonNull Context context) {
         mTasksRemoteDataSource = TasksRemoteDataSource.getInstance();
-        mTasksLocalDataSource =  TasksLocalDataSource.getInstance(context);
+        mTasksLocalDataSource = TasksLocalDataSource.getInstance(context);
     }
 
-    public static TasksRepository getInstance(@NonNull Context context) {
+    public static TasksRepository getInstance(@NonNull final Context context) {
         if (INSTANCE == null) {
             INSTANCE = new TasksRepository(context);
         }
         return INSTANCE;
     }
 
-    public static void destroyInstance() {
+    public void destroyInstance() {
+        INSTANCE.mTasksLocalDataSource.destroyInstance();
+        INSTANCE.mTasksRemoteDataSource.destroyInstance();
         INSTANCE = null;
     }
 
@@ -49,17 +49,7 @@ public class TasksRepository implements TasksDataSource{
     public void getTasks(@NonNull final LoadTasksCallback callback) {
         checkNotNull(callback);
 
-        // Respond immediately with cache if available and not dirty
-        if (mCachedTasks != null && !mCacheIsDirty) {
-            callback.onTasksLoaded(new ArrayList<>(mCachedTasks.values()));
-            return;
-        }
-
-        if (mCacheIsDirty) {
-            // If the cache is dirty we need to fetch new data from the network.
-            getTasksFromRemoteDataSource(callback);
-        } else {
-            // Query the local storage if available. If not, query the network.
+            // Query the local storage if available.
             mTasksLocalDataSource.getTasks(new LoadTasksCallback() {
                 @Override
                 public void onTasksLoaded(List<Task> tasks) {
@@ -72,7 +62,10 @@ public class TasksRepository implements TasksDataSource{
                     getTasksFromRemoteDataSource(callback);
                 }
             });
-        }
+
+
+            // Fetch new data from the network.
+            getTasksFromRemoteDataSource(callback);
     }
 
     @Override
@@ -199,7 +192,7 @@ public class TasksRepository implements TasksDataSource{
 
     @Override
     public void refreshTasks() {
-        mCacheIsDirty = true;
+
     }
 
     @Override
@@ -243,10 +236,10 @@ public class TasksRepository implements TasksDataSource{
             mCachedTasks = new LinkedHashMap<>();
         }
         mCachedTasks.clear();
-        for (Task task : tasks) {
-            mCachedTasks.put(task.getId(), task);
+
+        for (Task t : tasks) {
+            mCachedTasks.put(t.getId(), t);
         }
-        mCacheIsDirty = false;
     }
 
     private void refreshLocalDataSource(List<Task> tasks) {

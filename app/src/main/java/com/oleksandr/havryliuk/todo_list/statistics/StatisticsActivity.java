@@ -14,7 +14,6 @@ import com.oleksandr.havryliuk.todo_list.R;
 import com.oleksandr.havryliuk.todo_list.auth.Auth;
 import com.oleksandr.havryliuk.todo_list.auth.AuthenticationActivity;
 import com.oleksandr.havryliuk.todo_list.data.source.TasksRepository;
-import com.oleksandr.havryliuk.todo_list.tasks.TasksActivity;
 import com.oleksandr.havryliuk.todo_list.utils.ActivityUtils;
 
 public class StatisticsActivity extends AppCompatActivity {
@@ -81,6 +80,7 @@ public class StatisticsActivity extends AppCompatActivity {
                                 break;
                             case R.id.sign_out_navigation_menu_item:
                                 Auth.signOut();
+                                TasksRepository.getInstance(StatisticsActivity.this).destroyInstance();
                                 startActivity(new Intent(StatisticsActivity.this,
                                         AuthenticationActivity.class));
                                 finish();

@@ -38,6 +38,11 @@ public class TasksLocalDataSource implements TasksDataSource {
         return INSTANCE;
     }
 
+    public void destroyInstance() {
+        deleteAllTasks();
+        INSTANCE = null;
+    }
+
     @Override
     public void getTasks(@NonNull final LoadTasksCallback callback) {
         Runnable runnable = new Runnable() {

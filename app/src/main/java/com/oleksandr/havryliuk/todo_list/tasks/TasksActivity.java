@@ -77,6 +77,7 @@ public class TasksActivity extends AppCompatActivity {
                                 break;
                             case R.id.sign_out_navigation_menu_item:
                                 Auth.signOut();
+                                TasksRepository.getInstance(TasksActivity.this).destroyInstance();
                                 startActivity(new Intent(TasksActivity.this, AuthenticationActivity.class));
                                 finish();
                             default:

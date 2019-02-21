@@ -19,15 +19,21 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.oleksandr.havryliuk.todo_list.R;
+import com.oleksandr.havryliuk.todo_list.utils.PreferenceManager;
 
 
 public class Auth {
     //Google Auth
     private final static int RC_SIGN_IN = 1;
+    public final static String EMAIL = "email";
 
     private static GoogleSignInClient googleSignInClient;
 
-    public static void signIn(String email, String password, final Activity activity) {
+    public static void saveEmail(String email){
+        PreferenceManager.setString(EMAIL, email);
+    }
+
+    public static void signIn(final String email, String password, final Activity activity) {
         final FirebaseAuth auth = FirebaseAuth.getInstance();
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
             @Override
@@ -36,6 +42,7 @@ public class Auth {
                     //if login sucess
                     Toast.makeText(activity, "Success Sign in", Toast.LENGTH_SHORT).show();
                     auth.getCurrentUser();
+                    saveEmail(email);
                     startMainActivity(activity);
                 } else {
                     // If sign in fails, display a message to the user.
@@ -45,7 +52,7 @@ public class Auth {
         });
     }
 
-    public static void signUp(String email, String password, final Activity activity) {
+    public static void signUp(final String email, String password, final Activity activity) {
         //register user with Firebase
         final FirebaseAuth auth = FirebaseAuth.getInstance();
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
@@ -54,6 +61,7 @@ public class Auth {
                 if (task.isSuccessful()) {
                     Toast.makeText(activity, "You are signed up.", Toast.LENGTH_SHORT).show();
                     sendSignUpConfirm(auth.getCurrentUser(), activity);
+                    saveEmail(email);
                     startMainActivity(activity);
                 } else {
                     Toast.makeText(activity, "Failed sign up", Toast.LENGTH_SHORT).show();
@@ -104,10 +112,10 @@ public class Auth {
         });
     }
 
-    private static void firebaseAuthWithGoogle(GoogleSignInAccount acct,
+    private static void firebaseAuthWithGoogle(final GoogleSignInAccount acct,
                                                final Activity activity) {
         //connecting to firebase
-        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        final AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         final FirebaseAuth auth = FirebaseAuth.getInstance();
         auth.signInWithCredential(credential)
                 .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
@@ -117,6 +125,7 @@ public class Auth {
                             // Sign in success, update UI with the signed-in user's information
                             Toast.makeText(activity, "Google authinication success", Toast.LENGTH_SHORT).show();
                             auth.getCurrentUser();
+                            saveEmail(acct.getEmail());
                             startMainActivity(activity);
                         } else {
                             // If sign in fails, display a message to the user.

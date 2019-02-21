@@ -28,6 +28,7 @@ public final class Task {
     @ColumnInfo(name = "description")
     private final String mDescription;
 
+
     @ColumnInfo(name = "completed")
     private final boolean mCompleted;
 
